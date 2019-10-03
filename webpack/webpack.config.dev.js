@@ -55,7 +55,7 @@ module.exports = {
     historyApiFallback: true,
     compress: false,
     host: process.env.IP || '0.0.0.0',
-    port: parseInt(process.env.PORT, 0) || 8080,
+    port: parseInt(process.env.PORT, 0) || 5000,
     hot: true,
     open: false,
     quiet: false,

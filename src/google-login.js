@@ -59,7 +59,11 @@ class GoogleLogin extends Component {
           window.gapi.auth2.init(params).then(
             res => {
               if (isSignedIn && res.isSignedIn.get()) {
-                this.handleSigninSuccess(res.currentUser.get())
+                this.handleSigninSuccess(res.currentUser.get(), true)
+              } else if (isSignedIn && !res.isSignedIn.get()) {
+                if (this.props.onAutoloadFailure) {
+                  this.props.onAutoloadFailure()
+                }
               }
             },
             err => onFailure(err)
@@ -99,7 +103,7 @@ class GoogleLogin extends Component {
       }
     }
   }
-  handleSigninSuccess(res) {
+  handleSigninSuccess(res, isAutoload) {
     /*
       offer renamed response keys to names that match use
     */
@@ -117,7 +121,12 @@ class GoogleLogin extends Component {
       givenName: basicProfile.getGivenName(),
       familyName: basicProfile.getFamilyName()
     }
-    this.props.onSuccess(res)
+    if (!isAutoload) {
+      this.props.onSuccess(res)
+    }
+    if (isAutoload && this.props.onAutoload) {
+      this.props.onAutoload(res)
+    }
   }
 
   render() {
